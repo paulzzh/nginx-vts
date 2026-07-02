@@ -29,7 +29,7 @@ cmake --build . --config Release --target brotlienc > /dev/null 2>&1
 cd ../../../..
 git clone --depth 1 --recursive https://github.com/leev/ngx_http_geoip2_module > /dev/null 2>&1
 git clone --depth 1 --recursive https://github.com/openresty/headers-more-nginx-module > /dev/null 2>&1
-git clone --depth 1 --recursive https://github.com/vozlt/nginx-module-vts > /dev/null 2>&1
+git clone --depth 1 --recursive https://github.com/paulzzh/nginx-module-vts > /dev/null 2>&1
 echo Build nginx.
 cd ..
 sed -i 's|export DEB_CFLAGS_MAINT_APPEND=.*|export DEB_CFLAGS_MAINT_APPEND=|g' rules
