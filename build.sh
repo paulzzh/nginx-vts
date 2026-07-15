@@ -16,8 +16,6 @@ apt-get build-dep --allow-change-held-packages --allow-downgrades --allow-remove
 nginx > /dev/null 2>&1
 echo Fetch NGINX source code.
 apt-get source nginx > /dev/null 2>&1
-echo Fetch OpenSSL source code.
-git clone --depth 1 --branch openssl-3.6.3 https://github.com/openssl/openssl > /dev/null 2>&1
 echo Fetch additional dependencies.
 cd nginx-*
 mkdir debian/modules
@@ -32,17 +30,21 @@ cd ../../../..
 git clone --depth 1 --recursive https://github.com/leev/ngx_http_geoip2_module > /dev/null 2>&1
 git clone --depth 1 --recursive https://github.com/openresty/headers-more-nginx-module > /dev/null 2>&1
 git clone --depth 1 --recursive https://github.com/paulzzh/nginx-module-vts > /dev/null 2>&1
+echo Fetch OpenSSL source code.
+git clone --depth 1 --branch openssl-3.6.3 https://github.com/openssl/openssl > /dev/null 2>&1
 echo Build nginx.
 cd ..
 sed -i 's|export DEB_CFLAGS_MAINT_APPEND=.*|export DEB_CFLAGS_MAINT_APPEND=|g' rules
 sed -i 's|export DEB_LDFLAGS_MAINT_APPEND=.*|export DEB_LDFLAGS_MAINT_APPEND=|g' rules
 sed -i 's|CFLAGS=""|CFLAGS="-Wno-error"|g' rules
-sed -i 's|--sbin-path=/usr/sbin/nginx|--sbin-path=/usr/sbin/nginx --with-openssl=$(CURDIR)/openssl --with-openssl-opt="no-shared no-idea no-mdc2 no-rc5 no-ssl3 no-tests no-capieng no-rdrand no-padlockeng enable-rfc3779 enable-cms enable-tfo enable-zstd enable-zlib enable-brotli" --add-module=$(CURDIR)/debian/modules/ngx_brotli --add-module=$(CURDIR)/debian/modules/ngx_http_geoip2_module --add-module=$(CURDIR)/debian/modules/headers-more-nginx-module --add-module=$(CURDIR)/debian/modules/nginx-module-vts|g' rules
+sed -i 's|--sbin-path=/usr/sbin/nginx|--sbin-path=/usr/sbin/nginx --with-openssl=$(CURDIR)/debian/modules/openssl --with-openssl-opt="no-shared no-idea no-mdc2 no-rc5 no-ssl3 no-tests no-capieng no-rdrand no-padlockeng enable-rfc3779 enable-cms enable-tfo enable-zstd enable-zlib enable-brotli" --add-module=$(CURDIR)/debian/modules/ngx_brotli --add-module=$(CURDIR)/debian/modules/ngx_http_geoip2_module --add-module=$(CURDIR)/debian/modules/headers-more-nginx-module --add-module=$(CURDIR)/debian/modules/nginx-module-vts|g' rules
 sed -i 's|--http-scgi-temp-path=/var/cache/nginx/scgi_temp --user=nginx --group=nginx|--user=www-data --group=www-data|g' rules
 sed -i 's|--with-compat||g' rules
 sed -i 's|--with-http_addition_module --with-http_auth_request_module --with-http_dav_module --with-http_flv_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_mp4_module --with-http_random_index_module --with-http_realip_module --with-http_secure_link_module --with-http_slice_module --with-http_ssl_module --with-http_stub_status_module --with-http_sub_module|--with-http_realip_module --with-http_ssl_module|g' rules
 sed -i 's|--with-mail --with-mail_ssl_module --with-stream --with-stream_realip_module --with-stream_ssl_module --with-stream_ssl_preread_module|--with-pcre-jit --without-select_module --without-poll_module --without-http_autoindex_module --without-http_browser_module --without-http_charset_module --without-http_empty_gif_module --without-http_limit_conn_module --without-http_memcached_module --without-http_mirror_module --without-http_referer_module --without-http_split_clients_module --without-http_scgi_module --without-http_ssi_module --without-http_upstream_hash_module --without-http_upstream_ip_hash_module --without-http_upstream_least_conn_module --without-http_upstream_random_module --without-http_upstream_zone_module|g' rules
 cd ..
+sed -i '/CORE_LIBS="\$CORE_LIBS \$OPENSSL\/\.openssl\/lib\/libcrypto\.a"/a\
+            CORE_LIBS="$CORE_LIBS -lz -lbrotlienc -lbrotlidec -lbrotlicommon -lm -lzstd"' auto/lib/openssl/conf
 dpkg-buildpackage -b > /dev/null 2>&1
 cd ..
 cp nginx_*.deb nginx.deb
