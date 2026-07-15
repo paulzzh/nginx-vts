@@ -4,7 +4,7 @@ echo Install dependencies.
 apt-get update > /dev/null 2>&1
 apt-get install --allow-change-held-packages --allow-downgrades --allow-remove-essential \
 -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold -fy \
-cmake git libmaxminddb-dev wget > /dev/null 2>&1
+cmake git libmaxminddb-dev wget perl zlib1g-dev libzstd-dev libbrotli-dev > /dev/null 2>&1
 wget -qO /etc/apt/trusted.gpg.d/nginx_signing.asc https://nginx.org/keys/nginx_signing.key
 echo deb-src https://nginx.org/packages/mainline/debian trixie nginx \
 >> /etc/apt/sources.list
@@ -16,6 +16,8 @@ apt-get build-dep --allow-change-held-packages --allow-downgrades --allow-remove
 nginx > /dev/null 2>&1
 echo Fetch NGINX source code.
 apt-get source nginx > /dev/null 2>&1
+echo Fetch OpenSSL source code.
+git clone --depth 1 --branch openssl-3.6.3 https://github.com/openssl/openssl > /dev/null 2>&1
 echo Fetch additional dependencies.
 cd nginx-*
 mkdir debian/modules
@@ -35,7 +37,7 @@ cd ..
 sed -i 's|export DEB_CFLAGS_MAINT_APPEND=.*|export DEB_CFLAGS_MAINT_APPEND=|g' rules
 sed -i 's|export DEB_LDFLAGS_MAINT_APPEND=.*|export DEB_LDFLAGS_MAINT_APPEND=|g' rules
 sed -i 's|CFLAGS=""|CFLAGS="-Wno-error"|g' rules
-sed -i 's|--sbin-path=/usr/sbin/nginx|--sbin-path=/usr/sbin/nginx --add-module=$(CURDIR)/debian/modules/ngx_brotli --add-module=$(CURDIR)/debian/modules/ngx_http_geoip2_module --add-module=$(CURDIR)/debian/modules/headers-more-nginx-module --add-module=$(CURDIR)/debian/modules/nginx-module-vts|g' rules
+sed -i 's|--sbin-path=/usr/sbin/nginx|--sbin-path=/usr/sbin/nginx --with-openssl=$(CURDIR)/openssl --with-openssl-opt="no-shared no-idea no-mdc2 no-rc5 no-ssl3 no-tests no-capieng no-rdrand no-padlockeng enable-rfc3779 enable-cms enable-tfo enable-zstd enable-zlib enable-brotli" --add-module=$(CURDIR)/debian/modules/ngx_brotli --add-module=$(CURDIR)/debian/modules/ngx_http_geoip2_module --add-module=$(CURDIR)/debian/modules/headers-more-nginx-module --add-module=$(CURDIR)/debian/modules/nginx-module-vts|g' rules
 sed -i 's|--http-scgi-temp-path=/var/cache/nginx/scgi_temp --user=nginx --group=nginx|--user=www-data --group=www-data|g' rules
 sed -i 's|--with-compat||g' rules
 sed -i 's|--with-http_addition_module --with-http_auth_request_module --with-http_dav_module --with-http_flv_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_mp4_module --with-http_random_index_module --with-http_realip_module --with-http_secure_link_module --with-http_slice_module --with-http_ssl_module --with-http_stub_status_module --with-http_sub_module|--with-http_realip_module --with-http_ssl_module|g' rules
