@@ -21,8 +21,12 @@ cd nginx-*
 mkdir debian/modules
 cd debian/modules
 git clone --depth 1 --recursive https://github.com/google/ngx_brotli > /dev/null 2>&1
-mkdir ngx_brotli/deps/brotli/out
-cd ngx_brotli/deps/brotli/out
+cd ngx_brotli
+git submodule update --init --remote deps/brotli
+cd deps/brotli
+git checkout v1.2.0
+mkdir out
+cd out
 cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=installed .. \
 > /dev/null 2>&1
 cmake --build . --config Release --target brotlienc > /dev/null 2>&1
