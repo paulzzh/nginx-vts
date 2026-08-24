@@ -31,7 +31,7 @@ cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=
 > /dev/null 2>&1
 cmake --build . --config Release --target brotlienc > /dev/null 2>&1
 cd ../../../..
-git clone --depth 1 --recursive https://github.com/myguard-labs/nginx-zstd-module > /dev/null 2>&1
+git clone --recursive https://github.com/myguard-labs/nginx-zstd-module > /dev/null 2>&1
 cd nginx-zstd-module
 git checkout 0.90.8
 cd ..
