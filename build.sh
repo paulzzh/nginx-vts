@@ -39,7 +39,7 @@ git clone --depth 1 --recursive https://github.com/leev/ngx_http_geoip2_module >
 git clone --depth 1 --recursive https://github.com/openresty/headers-more-nginx-module > /dev/null 2>&1
 git clone --depth 1 --recursive https://github.com/paulzzh/nginx-module-vts > /dev/null 2>&1
 echo Fetch OpenSSL source code.
-git clone --depth 1 --branch openssl-3.6.3 https://github.com/openssl/openssl > /dev/null 2>&1
+git clone --depth 1 --branch openssl-3.6.4 https://github.com/openssl/openssl > /dev/null 2>&1
 echo Build nginx.
 cd ..
 sed -i 's|export DEB_CFLAGS_MAINT_APPEND=.*|export DEB_CFLAGS_MAINT_APPEND=|g' rules
