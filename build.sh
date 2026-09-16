@@ -33,7 +33,7 @@ cmake --build . --config Release --target brotlienc > /dev/null 2>&1
 cd ../../../..
 git clone --recursive https://github.com/myguard-labs/nginx-zstd-module > /dev/null 2>&1
 cd nginx-zstd-module
-git checkout 0.90.8
+git checkout 0.90.9
 cd ..
 git clone --depth 1 --recursive https://github.com/leev/ngx_http_geoip2_module > /dev/null 2>&1
 git clone --depth 1 --recursive https://github.com/openresty/headers-more-nginx-module > /dev/null 2>&1
