@@ -1,5 +1,5 @@
 diff --git a/src/event/ngx_event_connect.c b/src/event/ngx_event_connect.c
-index e18b3a5c6..50c2bcc53 100644
+index e18b3a5c6..d92221797 100644
 --- a/src/event/ngx_event_connect.c
 +++ b/src/event/ngx_event_connect.c
 @@ -38,7 +38,18 @@ ngx_event_connect_peer(ngx_peer_connection_t *pc)
@@ -22,7 +22,7 @@ index e18b3a5c6..50c2bcc53 100644
  
      ngx_log_debug2(NGX_LOG_DEBUG_EVENT, pc->log, 0, "%s socket %d",
                     (type == SOCK_STREAM) ? "stream" : "dgram", s);
-@@ -97,6 +108,18 @@ ngx_event_connect_peer(ngx_peer_connection_t *pc)
+@@ -97,6 +108,19 @@ ngx_event_connect_peer(ngx_peer_connection_t *pc)
          }
      }
  
