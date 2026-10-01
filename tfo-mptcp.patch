@@ -1,0 +1,44 @@
+diff --git a/src/event/ngx_event_connect.c b/src/event/ngx_event_connect.c
+index e18b3a5c6..50c2bcc53 100644
+--- a/src/event/ngx_event_connect.c
++++ b/src/event/ngx_event_connect.c
+@@ -38,7 +38,18 @@ ngx_event_connect_peer(ngx_peer_connection_t *pc)
+ 
+     type = (pc->type ? pc->type : SOCK_STREAM);
+ 
+-    s = ngx_socket(pc->sockaddr->sa_family, type, 0);
++    int protocol = 0;
++
++#if (NGX_LINUX)
++    if ((pc->sockaddr->sa_family == AF_INET ||
++        pc->sockaddr->sa_family == AF_INET6)
++        && ((type & 0xff) == SOCK_STREAM))
++    {
++        protocol = IPPROTO_MPTCP;
++    }
++#endif
++
++    s = ngx_socket(pc->sockaddr->sa_family, type, protocol);
+ 
+     ngx_log_debug2(NGX_LOG_DEBUG_EVENT, pc->log, 0, "%s socket %d",
+                    (type == SOCK_STREAM) ? "stream" : "dgram", s);
+@@ -97,6 +108,18 @@ ngx_event_connect_peer(ngx_peer_connection_t *pc)
+         }
+     }
+ 
++    if (1)
++    {
++        value = 1;
++
++        if (setsockopt(s, SOL_SOCKET, TCP_FASTOPEN_CONNECT,
++                       (const void *) &value, sizeof(int))
++            == -1)
++        {
++            ngx_log_error(NGX_LOG_ALERT, pc->log, ngx_socket_errno,
++                          "setsockopt(TCP_FASTOPEN_CONNECT) failed, ignored");
++        }
++    }
++
+     if (ngx_nonblocking(s) == -1) {
+         ngx_log_error(NGX_LOG_ALERT, pc->log, ngx_socket_errno,
+                       ngx_nonblocking_n " failed");

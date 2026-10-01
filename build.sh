@@ -18,6 +18,8 @@ echo Fetch NGINX source code.
 apt-get source nginx > /dev/null 2>&1
 echo Fetch additional dependencies.
 cd nginx-*
+git apply --check /github/workspace/tfo-mptcp.patch
+git apply /github/workspace/tfo-mptcp.patch
 mkdir debian/modules
 cd debian/modules
 git clone --depth 1 --recursive https://github.com/google/ngx_brotli > /dev/null 2>&1
