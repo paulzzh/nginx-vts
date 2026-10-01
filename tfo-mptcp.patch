@@ -26,11 +26,11 @@ index e18b3a5c6..d92221797 100644
          }
      }
  
-+    if (1)
++    if (protocol == IPPROTO_MPTCP)
 +    {
 +        value = 1;
 +
-+        if (setsockopt(s, SOL_SOCKET, TCP_FASTOPEN_CONNECT,
++        if (setsockopt(s, IPPROTO_TCP, TCP_FASTOPEN_CONNECT,
 +                       (const void *) &value, sizeof(int))
 +            == -1)
 +        {
