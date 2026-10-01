@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - "**.sh"
+      - "**.patch"
       - Dockerfile
   workflow_dispatch:
 jobs:
