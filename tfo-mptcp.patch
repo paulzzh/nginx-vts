@@ -14,7 +14,7 @@ index e18b3a5c6..d92221797 100644
 +        pc->sockaddr->sa_family == AF_INET6)
 +        && ((type & 0xff) == SOCK_STREAM))
 +    {
-+        protocol = 0;
++        protocol = IPPROTO_MPTCP;
 +    }
 +#endif
 +
@@ -26,7 +26,7 @@ index e18b3a5c6..d92221797 100644
          }
      }
  
-+    if (1)
++    if (protocol == IPPROTO_MPTCP)
 +    {
 +        value = 1;
 +
